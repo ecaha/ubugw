@@ -2,9 +2,17 @@ network:
     version: 2
     ethernets:
       eth0:
+        match:
+          macaddress: "<WAN_MAC>"
         dhcp4: true
       eth1:
+        match:
+          macaddress: "<LAN_MAC>"
+    vlans:
+      eth1.110:
+        id: 110
+        link: eth1
         dhcp4: false
-        addresses:
-          - 192.168.100.1/24
+        addresses: [192.168.100.1/24]
+
         

@@ -65,6 +65,23 @@ New-CloudInitIso -JsonConfig $JsonConfig -VmPath $vmLocation -InitVariables @{}
 ```
 
 ```Powershell
+$vars = @{
+    EXTERNAL_SWITCH = "Internet"
+    INTERNAL_SWITCH = "LAN"
+    OS_DISK_PATH = "C:\\temp\\ubuvhd\\ubuntu-latest.vhdx"
+}
+$vmLocation = "C:\VM\test"
+$JsonConfig = Get-JsonFromTemplate -JsonTemplate ./JsonVM/ubugw.json -Variables $vars
+New-HyperVM -JsonConfig $JsonConfig -VmPath $vmLocation
 $vm = Get-VM ubugw
-$vm | Add-vmdv
+$vm | Start-VM
+Start-Sleep 3
+$vm | Stop-VM -Force -TurnOff
+New-CloudInitIso -JsonConfig $JsonConfig -VmPath $vmLocation -InitVariables @{} 
+$vmPath = $vmLocation
+$vmName = $vm.Name  
+$vm | Add-VMDvdDrive -Path "$vmPath/$vmName/cloud-init.iso"
+$vm | Start-VM
+
+Remove-HyperVM $vmName
 ```

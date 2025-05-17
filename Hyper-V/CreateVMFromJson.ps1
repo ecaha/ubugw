@@ -51,7 +51,7 @@ function New-CloudInitIso {
     #add variables to the hashtable
     $vmMacs = $vm | Get-VMNetworkAdapter | Select-Object Name, MacAddress
     foreach ($vmMac in $vmMacs) {
-        $value = $vmMac.MacAddress
+        $value = $($vmMac.MacAddress -replace '..(?!$)', '$&:')
         $key = $vmMac.Name + "_MAC"
         $InitVariables += (@{$key = $value})
     }
@@ -59,7 +59,7 @@ function New-CloudInitIso {
 
     foreach ($file in Get-ChildItem -Path $CloudInitSourcePath) {
         $fileName = $file.BaseName
-        if (! $fileName -in @("user-data", "meta-data", "vendor-data", "network-config"))
+        if ($fileName -notin @("user-data", "meta-data", "vendor-data", "network-config"))
         {
             Write-Warning "File '$fileName' is not a valid cloud-init file. Skipping."
             continue
