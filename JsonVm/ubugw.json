@@ -1,0 +1,33 @@
+{
+    "name": "ubugw",
+    "ram": "1GB",
+    "cpu": 2,
+    "secure_boot": false,
+    "nested_virtualization": false,
+    "network_adapters": [
+        {
+            "switch_name": "<EXTERNAL_SWITCH>",
+            "adapter_name": "WAN",
+            "vlan_id": 0,
+            "mac_spoofing": false
+        },
+        {
+            "switch_name": "<INTERNAL_SWITCH>",
+            "adapter_name": "LAN",
+            "vlan_id": 0,
+            "mac_spoofing": true,
+            "trunk": "1-4094"
+        }
+    ],
+    "disks": [
+        {
+            "name" : "OSdisk",
+            "source_path": "<OS_DISK_PATH>"
+        },
+        {
+            "name" : "DataDisk01",
+            "size": "32GB"
+        }
+    ],
+    "cloud_init_path": "C:/temp/repos/ubugw/JsonVm/ubugw"
+}
